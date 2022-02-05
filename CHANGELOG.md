@@ -10,6 +10,7 @@ TBA
 ## [1.0.0] - 2022-02-05
 ### Added
 - feature called cli_documentation to add help documentation for App.java
+- edited CHANGELOG typos and added first release
 
 ## [0.0.1] - 2022-01-31
 ### Added

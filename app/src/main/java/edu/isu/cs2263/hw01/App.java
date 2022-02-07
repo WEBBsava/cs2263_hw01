@@ -5,11 +5,19 @@ package edu.isu.cs2263.hw01;
 
 import org.apache.commons.cli.*;
 
+import java.io.Console;
+import java.util.Scanner;
+
+/**
+ * An app that evaluates a given expression either from the console or a batch file.
+ * @author Savannah Webb
+ */
+
 public class App {
 
     public static void main(String[] args) {
-        boolean shouldExit = true;
         // create the command line parser
+        CommandLine cmd;
         CommandLineParser parser = new DefaultParser();
         HelpFormatter helpFormatter = new HelpFormatter();
         // create the Options
@@ -19,14 +27,70 @@ public class App {
         options.addOption("o", "output <file>", false, "output file");
 
         try {
-            CommandLine cmd = parser.parse(options, args);
+            cmd = parser.parse(options, args);
+
             helpFormatter.printHelp("eval [OPTIONS]", "Evaluation of simple mathematical expressions.",
                     options, "1. Copyright (C) 2022 Savannah Webb".indent(15));
-            if (shouldExit) {
-                return;
+            try {
+                if (cmd.hasOption("b")) {
+                    input.batch_input(cmd.getArgs()[0]);
+                } else if (cmd.hasOption("h")) {
+                    helpFormatter.printHelp("eval [OPTIONS]", "Evaluation of simple mathematical expressions.",
+                            options, "1. Copyright (C) 2022 Savannah Webb".indent(15));
+                } else {
+                    String equation = String.join(" ", cmd.getArgList());
+                    input.console_input(equation);
+                }
+
+            } finally {
+                System.exit(0);
             }
+
+            // Terminate cmd
+            System.exit(0);
         } catch (ParseException exp) {
             System.err.println("Parsing failed. Reason: " + exp.getMessage());
         }
+
+/*
+        int x = 0;
+        boolean console = false;
+        boolean file = true;
+        Scanner scanner;
+        while (x != 5) {
+            if (console) {
+                while (true) {
+                    System.out.print(">  ");
+                    scanner = new Scanner(System.in);
+                    String line = scanner.nextLine();
+                    int result = expression_evaluator.eval_expression(line);
+                    output.out(Integer.toString(result));
+                }
+            }
+            if (file) {
+                System.out.println("Working Directory = " + System.getProperty("user.dir"));
+                System.out.print("Enter file name\n>  ");
+                scanner = new Scanner(System.in);
+                String name = scanner.nextLine();
+
+                try {
+                    scanner = new Scanner(new File(name));
+                    while(scanner.hasNextLine()) {
+                        String expr = scanner.nextLine();
+                        int result = expression_evaluator.eval_expression(expr);
+                        String out = expr + " = " + Integer.toString(result) + "\n";
+                        output.out(out);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                file = false;
+            }
+            x++;
+        }
+        */
+
     }
+
+
 }
